@@ -1,0 +1,80 @@
+package com.skilldistillery.kenzan.controllers;
+
+@CrossOrigin({"*", "http://localhost:4205"})
+@RequestMapping("api")
+@RestController
+public class EmployeeController {
+	
+	@Autowired
+	private BookingService pBServ;
+	
+	
+	@GetMapping("bookings")
+	public List<Booking> listAllBookings(HttpServletResponse response) {
+		List<Booking> bookings = pBServ.listAllBookings();
+		if (bookings == null) {
+			response.setStatus(404);
+		}
+		return bookings;
+	}
+	
+	@GetMapping("bookings/{id}")
+	public Booking listBookingById(@PathVariable Integer id, HttpServletResponse response) {
+		Booking booking  = pBServ.findBookingById(id);
+		if (booking == null) {
+			response.setStatus(404);
+		}
+		return booking;
+	}
+	
+	@PostMapping("bookings")
+	public Booking createNewBooking(@RequestBody Booking booking, HttpServletResponse response, HttpServletRequest request) {
+		booking = pBServ.createNewBooking(booking);
+		if (booking == null) {
+			response.setStatus(404);
+		}
+		else {
+			response.setStatus(201);
+		StringBuffer url = request.getRequestURL();
+		url.append("/").append(booking.getId());
+		response.setHeader("Location", url.toString());
+		
+		}
+		return booking;
+	}
+	
+	@PutMapping("bookings/{id}")
+	public Booking updatePost(@RequestBody Booking booking, @PathVariable int id, HttpServletResponse response) {
+		booking = pBServ.updateBooking(id, booking);
+		try {
+			if (booking == null) {
+
+				response.setStatus(404);
+			} 
+		} catch (Exception e) {
+			// TODO: handle exception
+			response.setStatus(400);
+			booking =null;
+		}
+		return booking;
+	}
+	@DeleteMapping("bookings/{id}")
+	public void deleteBooking(@PathVariable Integer id, HttpServletResponse response) {
+		try {
+			
+		boolean deleted =pBServ.deleteBooking(id);
+		if (deleted) {
+			response.setStatus(204);
+		}
+		else {
+			response.setStatus(404);
+		}
+		} catch (Exception e) {
+			// TODO: handle exception
+			response.setStatus(400);
+		}
+	
+	}
+
+	
+	

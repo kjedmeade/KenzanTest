@@ -1,0 +1,5 @@
+package com.skilldistillery.kenzan.repositories;
+
+public class EmployeeRepo {
+
+}

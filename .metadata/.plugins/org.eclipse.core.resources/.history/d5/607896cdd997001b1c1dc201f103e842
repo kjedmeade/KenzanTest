@@ -1,0 +1,60 @@
+package com.skilldistillery.kenzan.entities;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import com.skilldistillery.kenzan.entitites.Kenzan;
+
+class KenzanTest {
+
+	private static EntityManagerFactory emf;
+	private EntityManager em;
+	private Kenzan kenzan;
+	
+	@BeforeAll
+	static void setUpBeforeClass() throws Exception {
+		emf = Persistence.createEntityManagerFactory("KenzanPU");
+	}
+
+	@AfterAll
+	static void tearDownAfterClass() throws Exception {
+		emf.close();
+	}
+
+	@BeforeEach
+	void setUp() throws Exception {
+		em = emf.createEntityManager();
+		kenzan = em.find(Kenzan.class, 1);
+
+	}
+
+	@AfterEach
+	void tearDown() throws Exception {
+		em.close();
+		kenzan = null;
+	}
+
+	@Test
+	@DisplayName("test for mapping kenzan entity")
+	void test1() {
+		assertNotNull(kenzan);
+		assertEquals("Mary", kenzan.getFirstName());
+		assertEquals("Gran", kenzan.getLastName());
+		assertEquals(1989, kenzan.getDob().getYear());
+	
+		
+	}
+	
+
+}
